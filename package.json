@@ -1,14 +1,15 @@
 {
   "name": "web-xterm",
   "version": "1.0.0",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [],
+  "type": "module",
   "author": "",
   "license": "ISC",
   "description": "",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
   "dependencies": {
     "@wasmer/sdk": "^0.9.0",
     "@xterm/addon-fit": "^0.10.0",
