@@ -1,6 +1,7 @@
-import "@xterm/xterm/css/xterm.css"
-import type { Instance } from "@wasmer/sdk"
-import { Terminal } from "@xterm/xterm"
+import "@xterm/xterm/css/xterm.css";
+import type { Instance } from "@wasmer/sdk";
+import { Terminal } from "@xterm/xterm";
+import { WebglAddon } from '@xterm/addon-webgl';
 
 // What is this? Why is it needed? Without it the init fails.
 // @ts-ignore
@@ -11,10 +12,24 @@ async function main() {
 
     // const log = "trace";
     const log = undefined;
-    await init({log, module: WasmModule});
+    await init({ log, module: WasmModule });
 
-    const term = new Terminal({ cursorBlink: true, convertEol: true });
+    const term = new Terminal({
+        rows: 30,
+        cols: 81,
+        scrollback: 0,
+        fontFamily: "Fira Mono, DejaVu Sans Mono, Noto Sans Mono, monospace",
+        lineHeight: 1.0,
+        cursorBlink: false,
+        cursorStyle: "underline",
+        convertEol: true
+    });
     term.open(document.getElementById("terminal")!);
+    // Without this, there are gaps between the block characters.
+    term.loadAddon(new WebglAddon());
+
+    // Focus the terminal:
+    setTimeout(() => term.focus(), 50);
 
     term.writeln("Loading...");
     const pkg = await Wasmer.fromRegistry("python/python");
@@ -26,7 +41,7 @@ async function main() {
     await home.writeFile("termcolor/termcolor.py", termcolor_py);
 
     term.writeln("Starting...");
-    const instance = await pkg.entrypoint!.run({ args: ["main.py"], mount: { "/home": home }, cwd: "/home"});
+    const instance = await pkg.entrypoint!.run({ args: ["main.py"], mount: { "/home": home }, cwd: "/home" });
     connectStreams(instance, term);
 }
 
