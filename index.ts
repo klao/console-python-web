@@ -8,7 +8,7 @@ import { FitAddon } from "@xterm/addon-fit"
 import WasmModule from "@wasmer/sdk/wasm?url";
 
 async function main() {
-    const { Wasmer, init } = await import("@wasmer/sdk");
+    const { Directory, Wasmer, init } = await import("@wasmer/sdk");
 
     await init({log: 'trace', module: WasmModule});
 
@@ -19,11 +19,12 @@ async function main() {
     fit.fit();
 
     term.writeln("Loading...");
+    const pkg = await Wasmer.fromRegistry("python/python");
+    const home = new Directory();
+    await home.writeFile("main.py", main_py);
 
-    const pkg = await Wasmer.fromRegistry("sharrattj/bash");
     term.writeln("Starting...");
-
-    const instance = await pkg.entrypoint!.run();
+    const instance = await pkg.entrypoint!.run({ args: ["main.py"], mount: { "/home": home }, cwd: "/home"});
     connectStreams(instance, term);
 }
 
@@ -35,5 +36,11 @@ function connectStreams(instance: Instance, term: Terminal) {
     instance.stdout.pipeTo(new WritableStream({ write: chunk => term.write(chunk) }));
     instance.stderr.pipeTo(new WritableStream({ write: chunk => term.write(chunk) }));
 }
+
+const main_py = `
+while True:
+    name = input("What's your name? ")
+    print(f"Hello, {name}!")
+`
 
 main().catch(console.error);
