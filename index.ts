@@ -22,7 +22,19 @@ async function main() {
         lineHeight: 1.0,
         cursorBlink: false,
         cursorStyle: "underline",
-        convertEol: true
+        convertEol: true,
+        theme: {
+            cursor: '#000000',
+            foreground: '#FFFFFF',
+            red: '#B71234',
+            green: '#009B48',
+            yellow: '#FF5800',
+            blue: '#0046AD',
+            brightYellow: '#FFD500',
+            brightWhite: '#FFFFFF',
+            white: '#000000',
+            black: '#666666'
+        }
     });
     term.open(document.getElementById("terminal")!);
     // Without this, there are gaps between the block characters.
