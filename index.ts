@@ -562,7 +562,7 @@ class Cube:
         self.state = newstate
         if anim:
             self.draw()
-            time.sleep(self.anim)
+            if self.anim: time.sleep(self.anim)
 
     def up(self, mul = 1):
         self.steps += 1
