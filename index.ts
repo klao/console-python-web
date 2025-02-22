@@ -708,7 +708,7 @@ try:
                 shuffle = list(product([cube.left, cube.front, cube.right, cube.up, cube.down, cube.back], [-1, 1, 2]))
                 oldanim = cube.anim
                 cube.anim = 0
-                for s in range(400):
+                for s in range(100):
                     f, i = choice(shuffle)
                     f(i)
                 cube.anim = oldanim
